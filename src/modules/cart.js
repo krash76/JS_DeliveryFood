@@ -5,6 +5,8 @@ export const cart = () => {
   const modalBody = modalCart.querySelector(".modal-body");
   const buttonSend = modalCart.querySelector(".button-primary");
   const buttonCancel = modalCart.querySelector(".clear-cart");
+  const modalPricetag = modalCart.querySelector(".modal-pricetag");
+ 
 
   const resetCart = () => {
     modalBody.innerHTML = "";
@@ -16,10 +18,11 @@ export const cart = () => {
     const cartArray = JSON.parse(localStorage.getItem("cart"));
     cartArray.map(item => {
       if (item.id === id) {
-        item.count++
+        item.count++;
       }
-      return item
+    return item
     });
+    
     localStorage.setItem("cart", JSON.stringify(cartArray));
     renderItems(cartArray)
   };
@@ -36,9 +39,19 @@ export const cart = () => {
     renderItems(cartArray)
   };
 
+  const total = () => {
+    const cartArray = JSON.parse(localStorage.getItem("cart"));
+    let newArray = [];
+    cartArray.map(item => {
+     let totalPrice = item.price * item.count;
+     newArray.push(totalPrice)
+    });
+    modalPricetag.textContent = newArray.reduce((sum, current) => sum + current, 0) + " ₽";
+  };
 
   const renderItems = (data) => {
-    modalBody.innerHTML= ``;
+    modalBody.innerHTML = "";
+    
     data.forEach(({name, price, id, count}) => {
       const cartElem = document.createElement("div");
       cartElem.classList.add("food-row");
@@ -53,13 +66,13 @@ export const cart = () => {
       `;
       modalBody.append(cartElem);
       })
+     total();
     };
 
     //https://jsonplaceholder.typicode.com/posts
 
 
   modalBody.addEventListener("click", (e) => {
-    console.log(e.target)
     e.preventDefault();
     if (e.target.classList.contains("btn-dec")) {
       decrementCount(e.target.dataset.index)
@@ -88,17 +101,17 @@ export const cart = () => {
     resetCart(); 
   });
 
-  buttonCart.addEventListener("click", () => {
+  buttonCart.addEventListener("click", (e) => {
     if (localStorage.getItem("cart")) {
       renderItems(JSON.parse(localStorage.getItem("cart")))
     }
      ;
     modalCart.classList.add("is-open");
   });
- close.addEventListener("click", () => {
+
+  close.addEventListener("click", () => {
     modalCart.classList.remove("is-open");
   });
 
 };
 
-cart();

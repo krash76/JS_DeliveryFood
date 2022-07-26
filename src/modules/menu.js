@@ -10,6 +10,21 @@ export const menu = () => {
     restaurantTitle.textContent = restaurant.name;
   };
 
+  const changeRating = (restaurant)=> {
+    const restaurantRating = document.querySelector(".rating");
+    restaurantRating.textContent = restaurant.stars;
+  };
+
+  const changePrice = (restaurant)=> {
+    const restaurantPrice = document.querySelector(".price");
+    restaurantPrice.textContent = "От " + restaurant.price + " ₽";
+  };
+
+   const changeCategoty = (restaurant)=> {
+    const restaurantCategory = document.querySelector(".category");
+    restaurantCategory.textContent = restaurant.kitchen;
+  };
+
   const addToCart = (cartItem) => {
     if (cartArray.some((item) => 
       item.id === cartItem.id)) {
@@ -50,7 +65,7 @@ export const menu = () => {
       `;
       card.querySelector(".button-card-text").addEventListener("click", () => {
         addToCart({name, price, count:1, id});  
-        // сокращенное от:
+        // деструктуризация - сокращенное от:
         // const cartItem = {
         //   name: name,
         //   price: price,
@@ -68,6 +83,9 @@ export const menu = () => {
   if (localStorage.getItem("restaurant")) {
     const restaurant = JSON.parse(localStorage.getItem("restaurant"));
     changeTitle(restaurant);
+    changeRating(restaurant);
+    changePrice(restaurant);
+    changeCategoty(restaurant);
 
     fetch(`./db/${restaurant.products}`)
     .then((response) => response.json())
